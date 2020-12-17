@@ -4,9 +4,9 @@ import 'package:baby_pacifier/pages/sounds.dart';
 import 'package:flutter/material.dart';
 
  void main() { 
- runApp(MaterialApp( 
-  home : App())
-);
+  runApp(MaterialApp( 
+    home : App())
+  );
 }
 
 class App extends StatefulWidget {

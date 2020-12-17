@@ -1,4 +1,4 @@
-package com.example.baby_pacifier
+package com.omarpv.babypacifier
 
 import io.flutter.embedding.android.FlutterActivity
 
