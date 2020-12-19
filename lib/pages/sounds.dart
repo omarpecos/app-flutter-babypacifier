@@ -26,6 +26,13 @@ void play(String path,String name){
   );
 }
 
+@override
+  void dispose() {
+    _myPlayer.dispose();
+    print("dispose - sounds");
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
