@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:baby_pacifier/models/SoundModel.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'dart:io';
 
 class Sounds extends StatefulWidget {
   @override
@@ -21,9 +22,44 @@ void play(String path,String name){
           album: 'Sonidos',
         )
       ),
-      loopMode: LoopMode.playlist,
+      loopMode: LoopMode.single,
       showNotification: true,
   );
+}
+
+void playStream(String streamUrl, String name) async{
+  try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+         //toast
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              duration : Duration(seconds: 1),
+              content: Text('Cargando estación de radio ...'),
+            )
+          );
+      }else{
+         throw new Error();
+      }
+      await _myPlayer.open(
+          Audio.liveStream( streamUrl ,
+            metas : Metas(
+              title: name,
+              album: 'Streaming'
+            )
+          ),
+          showNotification: true,
+      );
+  } catch (t) {
+     // await _myPlayer.updateCurrentAudioNotification(showNotifications: false);
+      //toast
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              duration : Duration(seconds: 5),
+              content: Text('Se ha producido un error. Conéctese a internet o inténtelo de nuevo'),
+            )
+          );
+  }
 }
 
 @override
@@ -35,32 +71,67 @@ void play(String path,String name){
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 130.0,
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 5.0,
-        ),
-        itemCount: soundData.length,
-        itemBuilder: (context, i) => Card(
-              color: Colors.lightBlue[300],
-              child: InkWell(
-                onTap: () => play(soundData[i].path,soundData[i].name),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image(image: AssetImage(soundData[i].icon), width: 50,height: 50,),
-                    Padding(padding: EdgeInsets.all(5)),
-                    Text(soundData[i].name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white, fontSize: 20)),
-                  ],
-                ),
+    return ListView(
+        padding: EdgeInsets.all(10),
+        children: [
+          Text('Sonidos', textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
+           GridView.builder(
+             padding: EdgeInsets.only(top : 10),
+              primary: false,
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150.0,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
               ),
-            )
-          ),
+              itemCount: soundDataLocal.length,
+              itemBuilder: (context, i) => Card(
+                    color: Colors.lightBlue[300],
+                    child: InkWell(
+                      onTap: () => play(soundDataLocal[i].path,soundDataLocal[i].name),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(image: AssetImage(soundDataLocal[i].icon), width: 50,height: 50,),
+                          Padding(padding: EdgeInsets.all(5)),
+                          Text(soundDataLocal[i].name,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  )
+              ),
+            Padding(padding: EdgeInsets.all(10)),
+            Text('Radio por Internet', textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
+             GridView.builder(
+               padding: EdgeInsets.only(top : 10),
+                primary: false,
+               shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200.0,
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                ),
+                itemCount: soundDataStream.length,
+                itemBuilder: (context, i) => Card(
+                      color: Colors.lightBlue[300],
+                      child: InkWell(
+                        onTap: () => playStream(soundDataStream[i].path, soundDataStream[i].name),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                             Image(image: AssetImage(soundDataStream[i].icon), width: 96,height: 96,),
+                             Padding(padding: EdgeInsets.all(5)),
+                             Text(soundDataStream[i].name,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white, fontSize: 25)),
+                          ],
+                        ),
+                      ),
+                    )
+              ),
+        ],
     );
   }
 }

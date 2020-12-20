@@ -30,7 +30,8 @@ class _RecordAudioPageState extends State<RecordAudioPage> {
   }
   
   String dateFormat(){
-   var date = DateTime.now();
+    //hora en formato GMT + 1 -- por defecto es GMT 00
+   var date = DateTime.now().add(Duration(hours: 1));
    var result = '${date.day}-${date.month}-${date.year}_${date.hour}-${date.minute}-${date.second}';
    return result;
   }
