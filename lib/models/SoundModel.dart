@@ -9,7 +9,7 @@ class SoundModel{
 
 List<SoundModel> soundDataLocal = [
   SoundModel(
-    name: 'Agapornis',
+    name: 'Periquitos',
     icon : 'assets/images/bird.png',
     path: 'assets/sounds/birds.mp3'
   ),

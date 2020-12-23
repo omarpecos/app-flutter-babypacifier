@@ -65,7 +65,7 @@ void playStream(String streamUrl, String name) async{
 @override
   void dispose() {
     _myPlayer.dispose();
-    print("dispose - sounds");
+      //print("dispose - sounds");
     super.dispose();
   }
 

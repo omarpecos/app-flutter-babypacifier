@@ -24,6 +24,17 @@ class _RecordsState extends State<Records> {
       _listofRecords();
   }
 
+   _createDir(io.Directory dir) async{
+    final path = io.Directory(dir.path + '/records');
+
+    if ((await path.exists())){
+        //print("exist Records folder");
+    }else{
+        //print("not exist Records folder");
+        path.create();
+    }
+  }
+
   void _listofRecords() async {
 
     io.Directory appDocDirectory;
@@ -34,10 +45,14 @@ class _RecordsState extends State<Records> {
       appDocDirectory = await getExternalStorageDirectory();
     }
 
+    _createDir(appDocDirectory);
+    io.Directory recordsDirectory = io.Directory("${appDocDirectory.path}/records/");
+
   if(mounted)
     setState(() {
-      files = io.Directory("${appDocDirectory.path}/").listSync();
-      dirLength = appDocDirectory.path.length + 1;
+      if (recordsDirectory.existsSync())
+        files = recordsDirectory.listSync();
+      dirLength = appDocDirectory.path.length + '/records/'.length;
     });
       // print('/storage/emulated/0/Android/data/com.omarpv.babypacifier/files/'.length);
   }
@@ -66,7 +81,7 @@ class _RecordsState extends State<Records> {
   @override
   void dispose() {
     _myPlayer.dispose();
-    print("dispose - records");
+      //print("dispose - records");
     super.dispose();
   }
 
@@ -173,7 +188,7 @@ class _RecordsState extends State<Records> {
       dir = (await getExternalStorageDirectory()).path;
     }
 
-    String newPath = dir + '/' + newName;
+    String newPath = dir + '/records/' + newName;
     try {
       //crea el nuevo archivo
       await file.copy(newPath);
@@ -238,7 +253,7 @@ class _RecordsState extends State<Records> {
         Padding(padding: EdgeInsets.only(bottom: 20)),
 
         if (files.length == 0)
-          Text('NO HAY GRABACIONES')
+          Text('NO HAY GRABACIONES', textAlign: TextAlign.center,)
         else
           Expanded(
               child: ListView.builder(

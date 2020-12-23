@@ -64,10 +64,11 @@ class _RecordAudioPageState extends State<RecordAudioPage> {
     });
   }
 
+
   Future _init() async {
     var hasPermission = await FlutterAudioRecorder.hasPermissions;
     if (hasPermission) {
-      String customPath = '/record_';
+      String customPath = '/records/record_';
       io.Directory appDocDirectory;
       if (io.Platform.isIOS) {
         appDocDirectory = await getApplicationDocumentsDirectory();
@@ -75,7 +76,7 @@ class _RecordAudioPageState extends State<RecordAudioPage> {
         appDocDirectory = await getExternalStorageDirectory();
       }
 
-      dirLength = appDocDirectory.path.length + 1;
+      dirLength = appDocDirectory.path.length + '/records/'.length;
 
       // can add extension like ".mp4" ".wav" ".m4a" ".aac"
       customPath = appDocDirectory.path +
