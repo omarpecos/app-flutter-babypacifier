@@ -49,7 +49,7 @@ List<SoundModel> soundDataLocal = [
     path: 'assets/sounds/whale.mp3'
   ),
    SoundModel(
-    name: 'Waves',
+    name: 'Olas',
     icon : 'assets/images/waves.png',
     path: 'assets/sounds/waves.mp3'
   ),

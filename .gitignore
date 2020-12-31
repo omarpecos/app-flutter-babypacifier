@@ -43,3 +43,4 @@ app.*.map.json
 # mis reglas
 assets/sounds/*
 !assets/sounds/.gitkeep
+key.properties

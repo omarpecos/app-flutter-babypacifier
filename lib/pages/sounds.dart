@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:baby_pacifier/models/SoundModel.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Sounds extends StatefulWidget {
   @override
@@ -89,16 +90,23 @@ void playStream(String streamUrl, String name) async{
                     color: Colors.lightBlue[300],
                     child: InkWell(
                       onTap: () => play(soundDataLocal[i].path,soundDataLocal[i].name),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image(image: AssetImage(soundDataLocal[i].icon), width: 50,height: 50,),
-                          Padding(padding: EdgeInsets.all(5)),
-                          Text(soundDataLocal[i].name,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white, fontSize: 20)),
-                        ],
-                      ),
+                      child: Container(
+                          padding: EdgeInsets.all(5),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(image: AssetImage(soundDataLocal[i].icon), width: 50,height: 50,),
+                                Padding(padding: EdgeInsets.all(5)),
+                                Flexible(
+                                  child : AutoSizeText(soundDataLocal[i].name,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                    maxLines: 2,
+                                  )
+                                ),
+                              ],
+                          ),
+                      )
                     ),
                   )
               ),
@@ -118,16 +126,23 @@ void playStream(String streamUrl, String name) async{
                       color: Colors.lightBlue[300],
                       child: InkWell(
                         onTap: () => playStream(soundDataStream[i].path, soundDataStream[i].name),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                             Image(image: AssetImage(soundDataStream[i].icon), width: 96,height: 96,),
-                             Padding(padding: EdgeInsets.all(5)),
-                             Text(soundDataStream[i].name,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white, fontSize: 25)),
-                          ],
-                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(image: AssetImage(soundDataStream[i].icon),width: 75,),
+                                Padding(padding: EdgeInsets.all(5)),
+                                Flexible(
+                                  child : AutoSizeText(soundDataStream[i].name,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.white, fontSize: 26),
+                                    maxLines: 1,
+                                  ),
+                                )
+                              ],
+                            ),
+                        )
                       ),
                     )
               ),
