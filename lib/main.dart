@@ -63,7 +63,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
           AboutListTile(
             icon: Icon(Icons.info),
             applicationName: 'Baby Pacifier',
-            applicationVersion: '1.0.1',
+            applicationVersion: '1.0.2',
             applicationIcon: Image.asset('assets/icon/icon.png', width: 50),
             child: Text('Sobre esta App', style: TextStyle(fontSize: 15, color: Colors.grey[700])),
             aboutBoxChildren: [
