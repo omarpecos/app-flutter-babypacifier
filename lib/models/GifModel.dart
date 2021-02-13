@@ -19,3 +19,10 @@ List<GifModel> gifDataUrl = [
     path : 'https://media.giphy.com/media/82nxC1u2BC8VU1wiZq/giphy.gif'
   ),
 ];
+
+class Video{
+  String name;
+  String url;
+
+  Video({this.name,this.url});
+}

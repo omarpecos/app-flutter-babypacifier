@@ -75,7 +75,7 @@ void playStream(String streamUrl, String name) async{
     return ListView(
         padding: EdgeInsets.all(10),
         children: [
-          Text('Sonidos', textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
+          Text('Naturaleza', textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
            GridView.builder(
              padding: EdgeInsets.only(top : 10),
               primary: false,
@@ -110,7 +110,47 @@ void playStream(String streamUrl, String name) async{
                     ),
                   )
               ),
+
             Padding(padding: EdgeInsets.all(10)),
+
+             Text('Ruido Blanco / Canciones', textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
+                GridView.builder(
+                  padding: EdgeInsets.only(top : 10),
+                    primary: false,
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 150.0,
+                      crossAxisSpacing: 5.0,
+                      mainAxisSpacing: 5.0,
+                    ),
+                    itemCount: whiteSoundDataLocal.length,
+                    itemBuilder: (context, i) => Card(
+                          color: Colors.lightBlue[300],
+                          child: InkWell(
+                            onTap: () => play(whiteSoundDataLocal[i].path,whiteSoundDataLocal[i].name),
+                            child: Container(
+                                padding: EdgeInsets.all(5),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image(image: AssetImage(whiteSoundDataLocal[i].icon), width: 50,height: 50,),
+                                      Padding(padding: EdgeInsets.all(5)),
+                                      Flexible(
+                                        child : AutoSizeText(whiteSoundDataLocal[i].name,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white, fontSize: 18),
+                                          maxLines: 2,
+                                        )
+                                      ),
+                                    ],
+                                ),
+                            )
+                          ),
+                        )
+                    ),
+
+            Padding(padding: EdgeInsets.all(10)),
+
             Text('Radio por Internet', textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
              GridView.builder(
                padding: EdgeInsets.only(top : 10),

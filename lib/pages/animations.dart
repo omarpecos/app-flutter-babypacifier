@@ -4,6 +4,12 @@ import 'package:baby_pacifier/pages/gifPage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/sembast_io.dart';
+/*import 'package:intent/intent.dart' as android_intent;
+import 'package:intent/action.dart' as android_action;*/
+import 'package:url_launcher/url_launcher.dart';
+
 
 class Animations extends StatefulWidget {
   @override
@@ -14,6 +20,104 @@ class _AnimationsState extends State<Animations> {
   List gifs = new List();
   int dirLength;
   bool internetConnection = false;
+
+  Database db;
+  StoreRef store;
+  Video newVideo = Video(name: '',url : '');
+  TextEditingController _nameController = new TextEditingController();
+  TextEditingController _urlController = new TextEditingController();
+  bool videosLoaded = false;
+  List<RecordSnapshot<dynamic,dynamic>> videosList;
+
+  void _createDb() async{
+     Directory dir;
+
+    if (Platform.isIOS) {
+      dir = await getApplicationDocumentsDirectory();
+    } else {
+      dir = await getExternalStorageDirectory();
+    }
+
+    String dbPath = 'videos.db';
+    store = StoreRef.main();
+    DatabaseFactory dbFactory = databaseFactoryIo;
+
+    db = await dbFactory.openDatabase(dir.path + '/' + dbPath);
+
+    //getAll
+    _getAllVideos();
+  }
+
+void _getAllVideos() async{
+     var records = (await store.find(db,
+      finder: Finder()));
+  
+    setState((){
+      videosList = records;
+      videosLoaded = true;
+    });
+      print(videosList);
+  }
+
+void _addRecord() async{
+  if (newVideo.name == '' || newVideo.url == ''){
+    //nothing
+  }else{
+    await store.record( newVideo.name ).put(db, {'name': newVideo.name,'url' : newVideo.url});
+     _getAllVideos();
+     Navigator.of(context).pop();
+     Scaffold.of(context).showSnackBar(
+      SnackBar(content : Text('Añadido "${newVideo.name}"'))
+    );
+  }
+}
+
+void _deleteVideo(String name) async{
+   await store.record(name).delete(db);
+   Scaffold.of(context).showSnackBar(
+      SnackBar(content : Text('"$name" eliminado'))
+    );
+    _getAllVideos();
+}
+
+void _showAddVideoDialog(){
+    AlertDialog dialog = new AlertDialog(
+      contentPadding: EdgeInsets.all(20),
+      content:  Column(
+          mainAxisSize: MainAxisSize.min,
+          children : [
+              Text('Añadir video', style: TextStyle(fontSize: 20)),
+              Padding(padding: EdgeInsets.only(bottom : 15)),
+              TextField(
+                decoration : InputDecoration(hintText : 'Nombre'),
+                controller : _nameController,
+                onChanged : (String value){setState(() {
+                    newVideo.name = value;
+                });}
+              ),
+              TextField(
+                decoration : InputDecoration(hintText : 'URL'),
+                controller : _urlController,
+                onChanged : (String value){setState(() {
+                    newVideo.url = value;
+                });}
+              )
+          ] 
+        ),
+      actions: [
+        FlatButton(
+          child : Text('Cancelar'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        FlatButton(
+          child : Text('Añadir'),
+          onPressed: () => _addRecord(),
+        )
+      ],
+    );
+
+    showDialog(context: context,child: dialog);
+}
 
   _openGifPage(String path, String type) {
     Navigator.of(context)
@@ -38,6 +142,7 @@ class _AnimationsState extends State<Animations> {
     super.initState();
     _testInternetConnection();
     _listOfGifs();
+    _createDb();
   }
 
   Future getImage() async {
@@ -108,7 +213,7 @@ class _AnimationsState extends State<Animations> {
       });
   }
 
-   void _showDeleteConfirmation(File file){
+  void _showDeleteConfirmation(File file){
     AlertDialog dialog = new AlertDialog(
       content : ListTile(
         leading: Icon(Icons.delete),
@@ -130,7 +235,7 @@ class _AnimationsState extends State<Animations> {
     showDialog(context: context, child : dialog);
   }
 
-   void _deleteFile(File file) async {
+  void _deleteFile(File file) async {
         try {
 
           await file.delete();
@@ -159,12 +264,41 @@ class _AnimationsState extends State<Animations> {
         } 
       }
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        duration: Duration(seconds: 3),
+        content: Text(
+            'Se ha producido un error. Conéctese a internet o inténtelo de nuevo'),
+      ));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(20),
         child: ListView(
           children: [
+            RaisedButton(
+                padding: EdgeInsets.all(10),
+                color: Colors.blueAccent,
+                onPressed: () => _showAddVideoDialog(),
+                child: Column(children: [
+                  Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  Text(
+                    'Añadir nuevo vídeo',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ])),
+            Padding(padding:EdgeInsets.only(bottom: 5)),
             RaisedButton(
                 padding: EdgeInsets.all(10),
                 color: Colors.blueAccent,
@@ -182,6 +316,38 @@ class _AnimationsState extends State<Animations> {
                         color: Colors.white),
                   ),
                 ])),
+            Padding(
+              padding: EdgeInsets.only(bottom: 15),
+            ),
+            
+            Text('Vídeos',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
+            if (videosLoaded && videosList.length == 0)
+              Padding(
+                padding : EdgeInsets.all(10),
+                child : Text(
+                'NO HAY VIDEOS',
+                textAlign: TextAlign.center,
+              ))
+            else if(videosLoaded && videosList.length > 0 )
+              ListView.builder(
+                primary: false,
+                shrinkWrap: true,
+                itemCount: videosList.length,
+                itemBuilder: (context, i) => ListTile(
+                      contentPadding: EdgeInsets.all(5),
+                      leading: Icon(Icons.live_tv),
+                      title: Text(videosList[i]['name']),
+                      trailing: IconButton(
+                        onPressed: 
+                          () => _deleteVideo(videosList[i]['name']),
+                        icon: Icon(Icons.delete),
+                      ),
+                      onTap: () => _launchURL(videosList[i]['url']),
+                  )
+                ),
+
             Padding(
               padding: EdgeInsets.only(bottom: 15),
             ),
@@ -213,16 +379,18 @@ class _AnimationsState extends State<Animations> {
                       ),
                     )),
             Padding(
-              padding: EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(bottom: 15),
             ),
             Text('Gifs Subidos',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.blueGrey[700], fontSize: 25)),
             if (gifs.length == 0)
-              Text(
+               Padding(
+                padding : EdgeInsets.all(10),
+                child : Text(
                 'NO HAY GIFS',
                 textAlign: TextAlign.center,
-              )
+              ))
             else
               Padding(
                 padding: EdgeInsets.only(bottom: 15),

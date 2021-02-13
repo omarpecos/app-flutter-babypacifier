@@ -60,7 +60,75 @@ List<SoundModel> soundDataLocal = [
   )
 ];
 
+List<SoundModel> whiteSoundDataLocal = [
+  SoundModel(
+    name: 'Ventilador',
+    icon : 'assets/images/fan.png',
+    path: 'assets/sounds/fan.ogg'
+  ),
+  SoundModel(
+    name: 'Campanillas',
+    icon : 'assets/images/chimes.png',
+    path: 'assets/sounds/windchimes.ogg'
+  ),
+  SoundModel(
+    name: 'Verano',
+    icon : 'assets/images/heat.png',
+    path: 'assets/sounds/heatwave.ogg'
+  ),
+  SoundModel(
+    name: 'Meditación',
+    icon : 'assets/images/meditacion.png',
+    path: 'assets/sounds/meditation.ogg'
+  ),
+  SoundModel(
+    name: 'Principe encantador',
+    icon : 'assets/images/instrumental.png',
+    path: 'assets/sounds/handsome-prince.mp3'
+  ),
+   SoundModel(
+    name: 'Entre las estrellas',
+    icon : 'assets/images/instrumental.png',
+    path: 'assets/sounds/among_the_stars_no_piano.mp3'
+  ),
+    SoundModel(
+    name: 'Banco del parque',
+    icon : 'assets/images/instrumental.png',
+    path: 'assets/sounds/park_bench.mp3'
+  ),
+   SoundModel(
+    name: 'Tonos de naranja',
+    icon : 'assets/images/instrumental.png',
+    path: 'assets/sounds/shades_of_orange.mp3'
+  ),
+   SoundModel(
+    name: 'Tómalo todo',
+    icon : 'assets/images/instrumental.png',
+    path: 'assets/sounds/take-it-all-in.mp3'
+  ),
+  SoundModel(
+    name: 'Un camino corto',
+    icon : 'assets/images/blues.png',
+    path: 'assets/sounds/piano_a_short_walk.mp3'
+  ),
+   SoundModel(
+    name: 'Si fuera un barco',
+    icon : 'assets/images/blues.png',
+    path: 'assets/sounds/piano_ifaboat.mp3'
+  ),
+   SoundModel(
+    name: 'María',
+    icon : 'assets/images/blues.png',
+    path: 'assets/sounds/piano_mary.mp3'
+  ),
+];
+
 List<SoundModel> soundDataStream = [
+  SoundModel(
+    name: 'Clásica',
+    icon : 'assets/images/orquesta.png',
+    path: 'http://174.36.206.197:8000/;stream/1'
+  ),
   SoundModel(
     name: 'Instrumental',
     icon : 'assets/images/instrumental.png',
